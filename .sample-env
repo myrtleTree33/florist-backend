@@ -1,5 +1,5 @@
 PORT=8080
-MONGO_URI=mongodb://localhost/test
+MONGO_URI=mongodb://localhost/florist
 
 AUTH_JWT_SECRET=182hd792
 AUTH_JWT_ISSUER=auth.joeltong.co

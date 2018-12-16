@@ -10,6 +10,7 @@ import { initPassport } from './utils/socialAuth';
 
 import baseRoutes from './routes/baseRoutes';
 import userRoutes from './routes/userRoutes';
+import itemRoutes from './routes/itemRoutes';
 
 // connect to Mongo DB
 logger.info(`Connecting to ${process.env.MONGO_URI}..`);
@@ -39,6 +40,7 @@ initPassport(app);
 // Routes
 app.use('/', baseRoutes);
 app.use('/user', userRoutes);
+app.use('/item', itemRoutes);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
