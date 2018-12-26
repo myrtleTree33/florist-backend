@@ -1,11 +1,22 @@
 import mongoose from 'mongoose';
 
-let mongooseHidden = require('mongoose-hidden')();
+import autoIncrement from 'mongoose-auto-increment';
+
+const mongooseHidden = require('mongoose-hidden')();
 
 const { Schema } = mongoose;
 
 const itemSchema = new Schema({
+  _id: {
+    type: Number,
+    unique: true,
+    required: true
+  },
   name: {
+    type: String,
+    required: true
+  },
+  gist: {
     type: String,
     required: true
   },
@@ -13,25 +24,27 @@ const itemSchema = new Schema({
     type: String,
     required: true
   },
+  landscapeImg: {
+    type: String,
+    required: true
+  },
+  imgSrc: {
+    type: Array,
+    required: true
+  },
   numStock: {
     type: Number,
-    required: true
+    required: true,
+    select: false
   },
   isInfQty: {
     type: Boolean,
     default: true,
-    required: true
+    required: true,
+    select: false
   },
   category: {
     type: String
-  },
-  mainImg: {
-    type: String,
-    required: true
-  },
-  imgs: {
-    type: Array,
-    required: false
   },
   price: new Schema({
     _id: false,
@@ -39,7 +52,7 @@ const itemSchema = new Schema({
       type: String,
       required: true
     },
-    amount: {
+    value: {
       type: Number,
       required: true
     }
@@ -53,5 +66,9 @@ itemSchema.set('toJSON', {
 
 // This will remove `_id` and `__v`
 itemSchema.plugin(mongooseHidden);
+
+// auto increment ID
+autoIncrement.initialize(mongoose.connection);
+itemSchema.plugin(autoIncrement.plugin, 'Item');
 
 export default mongoose.model('Item', itemSchema);
