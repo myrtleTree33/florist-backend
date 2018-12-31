@@ -1,0 +1,15 @@
+{
+  "_id": 1000,
+  "name": "Flower combi A",
+  "gist": "This is a simple summary",
+  "description": "This is a longer description",
+  "landscapeImg": "img.jpg",
+  "imgSrc": ["img.jpg"],
+  "numStock": 20,
+  "isInfQty": false,
+  "category": "FOR_HER",
+  "price": {
+    "currency": "SGD",
+    "value": 23.55
+  }
+}
