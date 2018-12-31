@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { MongooseDocument } from 'mongoose';
 
 import autoIncrement from 'mongoose-auto-increment';
 
@@ -27,15 +27,42 @@ const openingHoursSchema = new Schema({
   }
 });
 
+function _constructDate(openingDate, hh, mm) {
+  const opening = moment(openingDate);
+  opening.seconds(0);
+  opening.minutes(mm);
+  opening.hours(hh);
+  return opening;
+}
+
 openingHoursSchema.statics.getIsStoreOpen = async function(storeId, timeQuery) {
   const day = timeQuery.day();
   const openingsForDay = await this.findOne({ storeId, day });
   if (!openingsForDay || openingsForDay.length === 0) {
     return Promise.resolve(false); // closed
   }
+
   for (let i = 0; i < openingsForDay.length; i++) {
     // TODO if between interval, allow.  Else disallow.
+    const curr = openingsForDay[i];
+    if (curr !== timeQuery.day()) {
+      continue;
+    }
+    const startTime = _constructDate(
+      timeQuery.getDate(),
+      curr.timeOpen.substring(0, 2),
+      curr.timeOpen.substring(1)
+    );
+    const endTime = _constructDate(
+      timeQuery.getDate(),
+      curr.timeClosed.substring(0, 2),
+      curr.timeClosed.substring(1)
+    );
+    if (timeQuery.isBetween(startTime, endTime)) {
+      return Promise.resolve(true);
+    }
   }
+  return Promise.resolve(false);
 };
 
 // This will add `id` in toJSON
